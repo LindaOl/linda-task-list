@@ -8,18 +8,18 @@ const TaskForm = ({ newTodo,
     <section className="form-wrapper">
       <article className="form-frame">
 
-        <div className="close-button-container">
-          <i
-            className="fa-regular fa-circle-xmark fa-xl"
-            onClick={onCloseForm}
-          ></i>
-        </div>
-
-        <form onSubmit={onFormSubmit}>
+        <div className="add-task-title-container">
+          <div className="close-button-container">
+            <i
+              className="fa-regular fa-circle-xmark fa-xl"
+              onClick={onCloseForm}
+            ></i>
+          </div>
 
           <h1><img src="./images/diddo.png" alt="Diddo icon" />Diddo</h1>
           <h2>Add Task</h2>
-
+        </div>
+        <form onSubmit={onFormSubmit}>
           <input type="text"
             className="text-input"
             value={newTodo}

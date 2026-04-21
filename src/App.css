@@ -214,6 +214,7 @@ header {
 
 
 header button {
+  display: flex;
   color: var(--title);
   border-radius: 8px;
   border: none;
@@ -292,24 +293,27 @@ header button {
 
 /*Task form*/
 .form-wrapper {
-  position: absolute;
   display: flex;
   flex-direction: column;
   width: 100%;
   min-height: 100vh;
   top: 0;
-  z-index: 20;
   background-color: var(--form-bg-opacity);
   align-items: center;
+  position: fixed;
+  inset: 0;
+  z-index: 999;
 }
 
 
 .form-frame {
   width: 85%;
-  background-color: var(--form-background);
+  background-color: var(--list-background-color);
   margin: 1.3em;
   border-radius: 24px;
+  min-height: 90vh;
 }
+
 
 
 .close-button-container {
@@ -323,9 +327,18 @@ header button {
   padding-top: 0.4em;
 }
 
+.add-task-title-container {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  background-color: var(--app-background-color);
+  align-items: center;
+  margin-bottom: 1em;
+}
+
 .form-frame h1,
 .form-frame h2 {
-  color: var(--light-text-color);
+  color: var(--tasks-text-color);
   font-family: var(--font2);
   font-weight: 400;
   color: var(--title);
@@ -334,6 +347,7 @@ header button {
 .form-frame h1 {
   display: flex;
   align-items: center;
+  color: var(--title);
 }
 
 
@@ -346,6 +360,9 @@ header button {
   width: 85%;
   line-height: 1.7;
   font-size: 1.1rem;
+  border: 1px solid var(--smaller-elements);
+  border-radius: 15px;
+  padding: 8px;
 }
 
 
@@ -368,23 +385,24 @@ header button {
 .suggestion-list {
   display: flex;
   flex-direction: column;
-  color: var(--light-text-color);
-  border: 1px solid var(--suggestion-box-border);
-  border-radius: 15px;
+  color: var(--tasks-text-color);
+  background-color: var(--list-background-color);
+  gap: 0.5em;
   overflow: hidden;
 }
 
 .suggestion-item {
   display: flex;
   width: 100%;
-  padding: 12px 16px;
+  padding: 20px 16px;
   box-sizing: border-box;
   cursor: pointer;
+  border-radius: 15px;
+  border: 1px solid var(--task-border);
+  background-color: var(--task-background);
 }
 
-.suggestion-item:not(:last-child) {
-  border-bottom: 1px solid var(--suggestion-box-border);
-}
+
 
 
 .suggestion-item:hover {
@@ -500,7 +518,8 @@ header button {
   .form-wrapper {}
 
   .form-frame {
-    width: 60%;
+    width: 70%;
+    margin-top: 3em;
   }
 
 }
