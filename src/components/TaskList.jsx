@@ -1,55 +1,64 @@
-const TaskList = ({ loading, taskList }) => {
+const TaskList = ({ loading, taskList, setTaskList }) => {
   if (loading) {
-    return <h1>Loading in progress...</h1>
+    return <h1>Loading in progress...</h1>;
   }
 
   const onTaskCheckChange = (task) => {
     // Make a POST request here with the updated task isChecked value
-
-    /* 
-    update a state object
-    
-    updatedTask is a new object that is the same as the task object except for the isChecked property, 
-    which is toggled from true to false or from false to true. 
-    This code is often used to update a property of an object while preserving the rest of its properties. */
-
-    /*     pass the updatedTask to the headers of your POST request
-
-    headers: { updatedTask, "Content-Type": "application/json" }
-    */
-
-    const updatedTask = { ...task, isChecked: !task.isChecked }
-
-    /*    Update the task list in the state
-    Use .map to update the specific task if found, otherwise return it unchanged
-
-    setTaskList() 
-    */
-  }
+    fetch(`https://task-api-m07f.onrender.com/tasks/${task._id}/check`, {
+      method: "POST",
+    })
+      .then((res) => res.json())
+      .then((updatedTask) => {
+        setTaskList((prevTaskList) =>
+          prevTaskList.map((item) =>
+            item._id === task._id ? updatedTask : item
+          )
+        );
+      })
+      .catch((err) => {
+        console.error("Failed to update task:", err);
+      });
+  };
 
   return (
     <section className="tasks">
       {taskList
+        .filter((task) => !task.isChecked)
+        .slice()
+        .reverse()
+        .sort((a, b) => b.date - a.date)
         .map((task) => (
           <div key={task._id} className="task">
-            <input
-              onChange={()=> {}}
-              type="checkbox"
-              checked={task.isChecked}
-            />
-            <h4>{task.description}</h4>
+            <div className="check">
+              <input
+                onChange={() => onTaskCheckChange(task)}
+                type="checkbox"
+                checked={task.isChecked}
+              />
+            </div>
 
-          {/* format the date */}
-            <p>{task.date}</p>
+            <div className="list-item">
+              <h4>{task.description}</h4>
+              {/* format the date */}
+              <p>
+                <i className="fa-regular fa-calendar"></i>
+                {new Date(task.date).toLocaleDateString("en-US", {
+                  month: "long",
+                  day: "numeric",
+                  year: "numeric",
+                })}
+              </p>
+            </div>
+
+            <div className="dotted-menu">
+              <i className="fa-solid fa-ellipsis-vertical"></i>
+              <i className="fa-solid fa-ellipsis-vertical fa-lg"></i>
+            </div>
           </div>
-        ))
-        /* reverse the list to show the newest tasks at the top
-        
-        show only the latest 10 tasks
-        */
-        }
+        ))}
     </section>
-  )
-}
+  );
+};
 
-export default TaskList
+export default TaskList;

@@ -1,17 +1,53 @@
-const TaskForm = ({ newTodo, onNewTodoChange, onFormSubmit }) => {
+const TaskForm = ({ newTodo,
+  onNewTodoChange,
+  onFormSubmit,
+  onCloseForm,
+  filteredSuggestions, onSuggestionCreate
+}) => {
   return (
-    <form onSubmit={onFormSubmit}>
-      <h1>📝 ToDo App</h1>
-      <h2>Type you tasks here below 👇</h2>
+    <section className="form-wrapper">
+      <article className="form-frame">
 
-      <textarea
-        value={newTodo}
-        onChange={onNewTodoChange}
-        placeholder="Type a task.."
-      />
-      <button type="submit">Submit form!</button>
-    </form>
-  )
-}
+        <div className="close-button-container">
+          <i
+            className="fa-regular fa-circle-xmark fa-xl"
+            onClick={onCloseForm}
+          ></i>
+        </div>
 
-export default TaskForm
+        <form onSubmit={onFormSubmit}>
+
+          <h1><img src="./images/diddo.png" alt="Diddo icon" />Diddo</h1>
+          <h2>Add Task</h2>
+
+          <input type="text"
+            className="text-input"
+            value={newTodo}
+            onChange={onNewTodoChange}
+            placeholder="Type a task.."
+          />
+          {/* Show matching previous tasks underneath the input */}
+          {filteredSuggestions.length > 0 && (
+            <div className="suggestion-box">
+              <div className="suggestion-list">
+                {filteredSuggestions.map((task) => (
+                  <div
+                    key={task._id}
+                    className="suggestion-item"
+                    onClick={() => onSuggestionCreate(task.description)}
+                  >
+                    {task.description}
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          <button type="submit">Add New Task</button>
+        </form>
+      </article>
+    </section>
+  );
+};
+
+export default TaskForm;
