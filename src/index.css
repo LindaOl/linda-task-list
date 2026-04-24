@@ -22,48 +22,113 @@
   -moz-osx-font-smoothing: grayscale;
   -webkit-text-size-adjust: 100%;
 
+
+  /*STYLING VARIABLES*/
+  /*App*/
   --background-color: #0a0e17;
-  --app-background-color: #0a1124;
+  --app-background-color: #17182b;
   --border: #2a3040;
 
-  --list-background-color: #f9f9fa;
-  --bright-purple: #5a37d2;
-  --selected-filter-background: #2f2e6e;
-  --light-text-color: #ccd0e5;
+  /*submit form "blur*/
+  --form-bg-opacity: #0a0e17ad;
+  --border-bottom-form-header: none;
 
+  /*smaller elements*/
+  --bright-purple: #5a37d2;
+  --light-text-color: #ccd0e5;
   --smaller-elements: #636878;
+  --dark-mode-elements: #9c9c9c;
   --trashcan-color: #fa7075;
   --devider-line: #3e455f;
   --title: #fefefe;
+  --hover-text: #fefefe;
+  --hover-colors: #2f2e6e;
+  --checkbox-color: brightness(1);
 
-  --task-background: #fefefe;
-  --tasks-text-color: #030512;
-  --task-border: #ececef;
+  /*submit form container/task container*/
+  --list-background-color: #f9f8f9;
+  --suggestion-box-bg: transparent;
 
-
-  /*Dark mode*/
-
-  --form-bg-opacity: #0a0e17ad;
+  /*suggestion list/task list*/
   --form-background: #1d1e36;
+  --form-outer-border: #272d3d;
+  --list-background-color: #f9f9fa;
+  --form-list-gap: 0;
+  --list-container-border-radius: 24px;
+  --list-container-border: 1px solid #3f3e5677;
+  --input-background: #fefefe;
+  --input-border: #2f2e6e;
 
-  --suggestion-box-border: #3f3e56;
+  /*task items / suggestion items*/
+  --task-background: #fefefe;
+  --task-border: 1px solid #eaebee;
+  --task-border-color: #272d3d;
+  --suggestion-box-border: #2f2e6e;
+  --task-border-color: none;
+  --tasks-text-color: #17182b;
 
+  /*suggestion form list item only*/
+  --task-item-border-radius: 0;
 
+  /*Toggle mode-icon*/
+  --toggle-on-icon: none;
+  --toggle-off-icon: inline-block;
 
-  /*fonts*/
+  /*FONTS*/
   --font1: "Gothic A1", sans-serif;
   --font2: "Inter", sans-serif;
 
+
 }
 
+
+
+/*Dark mode*/
 [data-theme="dark"] {
-  /*Dark mode*/
+  /*App*/
+  --app-background-color: #17182b;
 
-  --form-bg-opacity: #0a0e17ad;
-  --form-background: #1d1e36;
 
-  --suggestion-box-border: #3f3e56;
+  /*smaller elements*/
+  --smaller-elements: #9c9c9c;
+  --checkbox-color: brightness(0.8);
+  --hover-colors: linear-gradient(to right,
+      #373652,
+      #373652d3,
+      #37365200,
+      #37365200,
+      #37365200,
+      #37365200);
+  --toggle-on-icon: inline-block;
+  --toggle-off-icon: none;
+
+
+  /*submit form/task container*/
+  --border-bottom-form-header: 1px solid #3f3e5677;
+  --suggestion-box-border: #22233a;
+  --form-outer-border: #242439;
+  /*?? does it need to change or get removed?*/
+  --suggestion-box-bg: transparent;
+
+
+  /*DARK suggestion list/task list*/
+  --list-background-color: #1a1c30;
+  --tasks-text-color: #cccccc;
+  --list-container-border-radius: 24px;
+  --list-container-border: 1px solid #3f3e5677;
+  --input-background: #131422;
+  --input-border: #5a37d2;
+
+
+  /*DARK task items / suggestion items*/
+  --task-background: #17182b;
+  --task-border: 1px solid transparent;
+  --task-border-color: 1px solid #3f3e56;
+  --task-item-border-radius: 0;
+
+
 }
+
 
 body {
   margin: 0;
@@ -74,9 +139,11 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+
 h2 {
   font-size: 1.4rem;
 }
+
 
 h4 {
   margin: 0;

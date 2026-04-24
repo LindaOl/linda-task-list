@@ -1,9 +1,9 @@
 import { useState, useEffect } from "react";
 import TaskForm from "./TaskForm";
 import TaskList from "./TaskList";
+import { UndoDeletion } from "./Undo";
 
-
-export const Tasks = () => {
+export const Tasks = ({ filter }) => {
   const [taskList, setTaskList] = useState([]);
   // define the setting state functions
   const [loading, setLoading] = useState(false);
@@ -11,13 +11,21 @@ export const Tasks = () => {
   const [showForm, setShowForm] = useState(false);
 
 
+  const [lastDeleted, setLastDeleted] = useState(null);
+
+  /*filters/sorting*/
+  const filteredTasks = taskList.filter((task) => {
+    if (filter === "current") return !task.isChecked;
+    if (filter === "completed") return task.isChecked;
+    return true;
+  });
+
   // fetch API, json = "tasks", setTaskList to be the json content (setTaskList)
   const fetchTasks = () => {
     setLoading(true);
     fetch("https://task-api-m07f.onrender.com/tasks")
       .then((res) => res.json())
       .then((tasks) => {
-        console.log(tasks);
         setTaskList(tasks);
       })
       .catch((err) => {
@@ -28,12 +36,10 @@ export const Tasks = () => {
       });
   };
 
-
   // Text input sets the new todo state.
   const handleNewTodoChange = (event) => {
     setNewTodo(event.target.value);
   };
-
 
   // create a task directly from a suggestion
   const handleSuggestionCreate = (description) => {
@@ -64,8 +70,71 @@ export const Tasks = () => {
       });
   };
 
+  //set isChecked on task locally when checkbox is clicked. save state in lastDeleted
+  const handleTaskCheck = (taskId) => {
+    const task = taskList.find((t) => t._id === taskId);
+    if (!task) return;
 
-  // remove default submit, and json content rests in createTask. In setTaskList add the newly created task to old list.
+    setTaskList((prev) =>
+      prev.map((t) =>
+        t._id === taskId ? { ...t, isChecked: true } : t
+      )
+    );
+    setLastDeleted(task);
+  };
+
+  // handle undo message box
+  const handleUndo = () => {
+    if (!lastDeleted) return;
+
+    setTaskList((prev) =>
+      prev.map((task) =>
+        task._id === lastDeleted._id
+          ? { ...task, isChecked: false }
+          : task
+      )
+    );
+    setLastDeleted(null);
+  };
+
+
+  //
+  const handleExpire = () => {
+    if (!lastDeleted) return;
+
+    const taskId = lastDeleted._id;
+    setLastDeleted(null);
+
+    // Call backend to permanently mark this task as isChecked: true.
+    // The backend sets isChecked = true and returns the updated task.
+    fetch(`https://task-api-m07f.onrender.com/tasks/${taskId}`, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        isChecked: true,
+      }),
+    })
+      .then((res) => res.json())
+      .then((updatedTask) => {
+        // Replace local task with backend-confirmed version
+        setTaskList((prev) =>
+          prev.map((task) =>
+            task._id === taskId ? updatedTask : task
+          )
+        );
+
+        // only remove undo AFTER success
+
+      })
+      .catch((err) => {
+        console.error("Failed to update task:", err);
+      });
+  }
+
+
+  /* remove default submit, and json content rests in createTask. In setTaskList add the newly created task to old list.*/
   const onFormSubmit = (event) => {
     event.preventDefault();
     if (!newTodo.trim()) return;
@@ -84,9 +153,9 @@ export const Tasks = () => {
     })
       .then((res) => res.json())
       .then((createdTask) => {
-        /*Add the createdtask to after previous*/
+        //Add the createdtask to after previous
         setTaskList((prev) => [...prev, createdTask]);
-        /*Clear the input field*/
+        //Clear the input field
         setNewTodo("");
         setShowForm(false);
       })
@@ -98,23 +167,20 @@ export const Tasks = () => {
       });
   };
 
-
   useEffect(() => {
     fetchTasks();
   }, []);
-
 
   /*open TaskForm*/
   const enableForm = () => {
     setShowForm(true);
   };
 
-
   /*close TaskForm*/
   const removeForm = () => {
     setShowForm(false);
+    setNewTodo("");
   };
-
 
   // filter in previous tasks fi they include text input
   const filteredSuggestions = taskList
@@ -136,18 +202,22 @@ export const Tasks = () => {
     );
 
 
+
   return (
     <section className="wrapper">
       <header>
         <div className="header-container">
           <div className="task-header">
             <h1>
-              <i className="fa-solid fa-bars fa-sm"></i>
-              All Tasks
+              {filter === "current"
+                ? "Active Tasks"
+                : filter === "completed"
+                  ? "Completed Tasks"
+                  : "All Tasks"}
             </h1>
             {/*Set the number of tasks to be the amount of taskt in the array with .length*/}
             <div className="counter-container">
-              <span>{taskList.length} Tasks</span>
+              <span>{taskList.filter((task) => !task.isChecked).length} Tasks</span>
             </div>
           </div>
 
@@ -162,9 +232,17 @@ export const Tasks = () => {
 
       <TaskList
         loading={loading}
-        taskList={taskList}
-        setTaskList={setTaskList}
+        taskList={filteredTasks}
+        onTaskCheck={handleTaskCheck}
       />
+      {lastDeleted && (
+        <UndoDeletion
+          key={lastDeleted._id}
+          onUndo={handleUndo}
+          onExpire={handleExpire}
+          taskText={lastDeleted.description}
+        />
+      )}
 
       {showForm && (
         <TaskForm
