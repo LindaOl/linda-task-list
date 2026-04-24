@@ -23,6 +23,7 @@ export const UndoDeletion = ({ onUndo, onExpire, taskText }) => {
 
         return () => clearInterval(interval);
     }, [secondsLeft, onExpire]);
+
     return (
         <div className="undo-container">
             <div className="trashcan-container">

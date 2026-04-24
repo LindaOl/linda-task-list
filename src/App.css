@@ -121,16 +121,17 @@ button {
 }
 
 
-.fa-bars,
+.fa-check-double,
 .fa-circle-check,
-.fa-trash-can {
+.fa-solid,
+.fa-check-double {
   color: var(--light-text-color);
   padding-right: 20px;
 }
 
 
 .fa-bars,
-.fa-trash-can {
+.fa-circle-check {
   padding-left: 1px;
 }
 
@@ -222,6 +223,7 @@ header {
   align-items: start;
   min-width: 70%;
   flex: 1;
+  position: relative;
 }
 
 
@@ -245,6 +247,45 @@ header button {
   font-weight: 500;
   margin: 1em 0 0 0;
   padding: 0.8em 1.4em;
+}
+
+
+/*mobile dropdown menu*/
+.mobile-dropdown {
+  display: flex;
+  flex-direction: column;
+  position: absolute;
+  top: 50%;
+  left: 0;
+  width: 100%;
+  z-index: 200;
+  padding: 0.5em;
+  gap: 0.5em;
+  width: auto;
+  background-color: var(--list-background-color);
+  border: 1px solid var(--border);
+  box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+  transition: 0.7s;
+  border-radius: 15px;
+}
+
+.mobile-menu-item {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  padding: 0.5em;
+  border-radius: 15px;
+  align-items: center;
+}
+
+.mobile-menu-item:hover {
+  background-color: var(--hover-colors);
+  color: var(--hover-text);
+}
+
+.mobile-menu-item .fa-bars {
+  color: var(--light-text-color);
+  padding-right: 20px;
 }
 
 
@@ -530,7 +571,7 @@ input[type="checkbox"] {
 
 
 /*TABLET*/
-@media screen and (min-width: 768px) {
+@media screen and (min-width: 767px) {
   #root {
     display: flex;
     flex-direction: column;
@@ -591,7 +632,7 @@ input[type="checkbox"] {
 
 
   .fa-bars,
-  .fa-trash-can,
+  .fa-check-double,
   .fa-circle-check {
     padding-right: 1em;
     transform: scale(1.1)
@@ -646,6 +687,43 @@ input[type="checkbox"] {
   .task-header .fa-bars {
     display: none;
   }
+
+
+  /*Submit task form*/
+  .form-frame {
+    display: flex;
+    flex-direction: column;
+    height: 90vh;
+  }
+
+  .form-frame img {
+    width: 11vw;
+  }
+
+  form {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-height: 0;
+  }
+
+  .suggestion-box {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    min-height: 0;
+  }
+
+  .suggestion-list {
+    flex: 1;
+    overflow-y: auto;
+    max-height: none;
+  }
+
+  form button {
+    margin-top: auto;
+  }
+
 
   /*Undo box*/
   .undo-container {

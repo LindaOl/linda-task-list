@@ -3,15 +3,15 @@ import TaskForm from "./TaskForm";
 import TaskList from "./TaskList";
 import { UndoDeletion } from "./Undo";
 
-export const Tasks = ({ filter }) => {
+export const Tasks = ({ filter, setFilter }) => {
   const [taskList, setTaskList] = useState([]);
   // define the setting state functions
   const [loading, setLoading] = useState(false);
   const [newTodo, setNewTodo] = useState("");
   const [showForm, setShowForm] = useState(false);
-
-
   const [lastDeleted, setLastDeleted] = useState(null);
+  /*State for mobile filter menu*/
+  const [showMobileMenu, setShowMobileMenu] = useState(false);
 
   /*filters/sorting*/
   const filteredTasks = taskList.filter((task) => {
@@ -209,12 +209,32 @@ export const Tasks = ({ filter }) => {
         <div className="header-container">
           <div className="task-header">
             <h1>
+              <i
+                className="fa-solid fa-bars fa-sm"
+                onClick={() => setShowMobileMenu((prev) => !prev)}
+              ></i>
               {filter === "current"
                 ? "Active Tasks"
                 : filter === "completed"
                   ? "Completed Tasks"
                   : "All Tasks"}
             </h1>
+            {showMobileMenu && (
+              <div className="mobile-dropdown">
+                <div className="mobile-menu-item" onClick={() => { setFilter("current"); setShowMobileMenu(false); }}>
+                  <i className="fa-solid fa-bars"></i>
+                  <h4>Current Tasks</h4>
+                </div>
+                <div className="mobile-menu-item" onClick={() => { setFilter("all"); setShowMobileMenu(false); }}>
+                  <i className="fa-solid fa-check-double"></i>
+                  <h4>All Tasks</h4>
+                </div>
+                <div className="mobile-menu-item" onClick={() => { setFilter("completed"); setShowMobileMenu(false); }}>
+                  <i className="fa-regular fa-circle-check"></i>
+                  <h4>Completed Tasks</h4>
+                </div>
+              </div>
+            )}
             {/*Set the number of tasks to be the amount of taskt in the array with .length*/}
             <div className="counter-container">
               <span>{taskList.filter((task) => !task.isChecked).length} Tasks</span>

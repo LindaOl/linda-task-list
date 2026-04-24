@@ -36,7 +36,7 @@ const TaskForm = ({ newTodo,
                     className="suggestion-item"
                     onClick={() => onSuggestionCreate(task.description)}
                   >
-                    <i class="fa-regular fa-square-plus fa-lg"></i>{task.description}
+                    <i className="fa-regular fa-square-plus fa-lg"></i>{task.description}
                   </div>
                 ))}
               </div>

@@ -10,6 +10,8 @@ export const App = () => {
   const [filter, setFilter] = useState("current");
 
 
+
+
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", theme);
   }, [theme]);
@@ -47,10 +49,10 @@ export const App = () => {
                 <i className="fa-solid fa-bars"></i>Current Tasks
               </li>
               <li className="menu-item" onClick={() => setFilter("all")}>
-                <i className="fa-regular fa-circle-check"></i>All Tasks
+                <i className="fa-solid fa-check-double"></i>All Tasks
               </li>
               <li className="menu-item" onClick={() => setFilter("completed")}>
-                <i className="fa-regular fa-trash-can"></i>Completed Tasks
+                <i className="fa-regular fa-circle-check"></i>Completed Tasks
               </li>
             </ul>
           </div>
@@ -67,7 +69,7 @@ export const App = () => {
           </button>
         </section>
 
-        <Tasks filter={filter} />
+        <Tasks filter={filter} setFilter={setFilter} />
       </div >
     </div >
   );
