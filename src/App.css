@@ -179,7 +179,6 @@ li {
 
 .fa-flip-horizontal {
   display: var(--toggle-off-icon);
-
 }
 
 
@@ -571,7 +570,7 @@ input[type="checkbox"] {
 
 
 /*TABLET*/
-@media screen and (min-width: 767px) {
+@media screen and (min-width: 768px) {
   #root {
     display: flex;
     flex-direction: column;
@@ -779,12 +778,13 @@ input[type="checkbox"] {
   .app-wrapper {
     padding: 1.3em;
     justify-content: center;
+    width: 100%;
   }
 
 
   .main-container {
     flex-direction: row;
-    width: 85%;
+    width: 90%;
     border-radius: 24px;
     flex: 0 0 85%;
     max-width: 1200px;
@@ -913,8 +913,25 @@ input[type="checkbox"] {
 
 }
 
-@media screen and (min-width: 1200px) {
+@media screen and (min-width: 1280px) {
   .title h1 {
     font-size: 1.8em;
+  }
+
+
+  /*Side menu*/
+
+  .dark-mode {
+    font-size: 1.2rem;
+    font-weight: 600;
+  }
+
+
+  .toggle-container {
+    padding: 0.6em;
+  }
+
+  .fa-toggle-on {
+    transform: scale(1.4);
   }
 }

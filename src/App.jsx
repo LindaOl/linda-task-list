@@ -63,7 +63,7 @@ export const App = () => {
               Dark Mode
             </div>
             <div className="toggle-container">
-              <i className="fa-solid fa-toggle-on fa-2xl"></i>
+              <i className="fa-solid fa-toggle-on fa-2xl fa-flip-on"></i>
               <i className="fa-solid fa-toggle-on fa-flip-horizontal fa-2xl"></i>
             </div>
           </button>
