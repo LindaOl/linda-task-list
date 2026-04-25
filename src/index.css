@@ -4,6 +4,11 @@
   box-sizing: border-box;
 }
 
+html,
+body,
+#root {
+  height: 100%;
+}
 
 :root {
   margin: 0;
@@ -46,11 +51,9 @@
   --checkbox-color: brightness(1);
 
   /*submit form container/task container*/
-  --list-background-color: #f9f8f9;
   --suggestion-box-bg: transparent;
 
   /*suggestion list/task list*/
-  --form-background: #1d1e36;
   --form-outer-border: #272d3d;
   --list-background-color: #f9f9fa;
   --form-list-gap: 0;
@@ -62,7 +65,6 @@
   /*task items / suggestion items*/
   --task-background: #fefefe;
   --task-border: 1px solid #eaebee;
-  --task-border-color: #272d3d;
   --suggestion-box-border: #2f2e6e;
   --task-border-color: none;
   --tasks-text-color: #17182b;
@@ -75,7 +77,7 @@
   --toggle-off-icon: inline-block;
 
   /*FONTS*/
-  --font1: "Gothic A1", sans-serif;
+
   --font2: "Inter", sans-serif;
 
 
@@ -87,7 +89,6 @@
 [data-theme="dark"] {
   /*App*/
   --app-background-color: #17182b;
-
 
   /*smaller elements*/
   --smaller-elements: #9c9c9c;
@@ -102,14 +103,10 @@
   --toggle-on-icon: inline-block;
   --toggle-off-icon: none;
 
-
   /*submit form/task container*/
   --border-bottom-form-header: 1px solid #3f3e5677;
   --suggestion-box-border: #22233a;
   --form-outer-border: #242439;
-  /*?? does it need to change or get removed?*/
-  --suggestion-box-bg: transparent;
-
 
   /*DARK suggestion list/task list*/
   --list-background-color: #1a1c30;
@@ -119,14 +116,14 @@
   --input-background: #131422;
   --input-border: #5a37d2;
 
-
   /*DARK task items / suggestion items*/
   --task-background: #17182b;
-  --task-border: 1px solid transparent;
+  --task-border: 1px solid #3f3e56;
   --task-border-color: 1px solid #3f3e56;
   --task-item-border-radius: 0;
 
-
+  /*dropdown*/
+  --border: #3f3e56;
 }
 
 

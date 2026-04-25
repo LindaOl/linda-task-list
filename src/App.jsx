@@ -46,7 +46,7 @@ export const App = () => {
           <div className="filter-container">
             <ul className="menu-filters">
               <li className="menu-item" onClick={() => setFilter("current")}>
-                <i className="fa-solid fa-bars"></i>Current Tasks
+                <i className="fa-solid fa-bars side-menu-bars"></i>Current Tasks
               </li>
               <li className="menu-item" onClick={() => setFilter("all")}>
                 <i className="fa-solid fa-check-double"></i>All Tasks

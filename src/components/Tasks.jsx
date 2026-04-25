@@ -4,23 +4,28 @@ import TaskList from "./TaskList";
 import { UndoDeletion } from "./Undo";
 
 export const Tasks = ({ filter, setFilter }) => {
+  // state
   const [taskList, setTaskList] = useState([]);
-  // define the setting state functions
   const [loading, setLoading] = useState(false);
   const [newTodo, setNewTodo] = useState("");
   const [showForm, setShowForm] = useState(false);
   const [lastDeleted, setLastDeleted] = useState(null);
-  /*State for mobile filter menu*/
   const [showMobileMenu, setShowMobileMenu] = useState(false);
 
-  /*filters/sorting*/
+
+  // filter tasks based on selected view
   const filteredTasks = taskList.filter((task) => {
     if (filter === "current") return !task.isChecked;
     if (filter === "completed") return task.isChecked;
     return true;
   });
 
-  // fetch API, json = "tasks", setTaskList to be the json content (setTaskList)
+
+  // count visible tasks
+  const count = filteredTasks.length;
+
+
+  // fetch tasks from API
   const fetchTasks = () => {
     setLoading(true);
     fetch("https://task-api-m07f.onrender.com/tasks")
@@ -36,13 +41,15 @@ export const Tasks = ({ filter, setFilter }) => {
       });
   };
 
-  // Text input sets the new todo state.
+
+  // update input value
   const handleNewTodoChange = (event) => {
     setNewTodo(event.target.value);
   };
 
-  // create a task directly from a suggestion
-  const handleSuggestionCreate = (description) => {
+
+  // create new task (used by form + suggestions)
+  const createTask = (description) => {
     setLoading(true);
 
     fetch("https://task-api-m07f.onrender.com/tasks", {
@@ -63,27 +70,45 @@ export const Tasks = ({ filter, setFilter }) => {
         setShowForm(false);
       })
       .catch((err) => {
-        console.error("Failed to add task from suggestion:", err);
+        console.error("Failed to add task:", err);
       })
       .finally(() => {
         setLoading(false);
       });
   };
 
-  //set isChecked on task locally when checkbox is clicked. save state in lastDeleted
-  const handleTaskCheck = (taskId) => {
-    const task = taskList.find((t) => t._id === taskId);
-    if (!task) return;
 
-    setTaskList((prev) =>
-      prev.map((t) =>
-        t._id === taskId ? { ...t, isChecked: true } : t
-      )
-    );
-    setLastDeleted(task);
+  // submit form to create task
+  const onFormSubmit = (event) => {
+    event.preventDefault();
+    if (!newTodo.trim()) return;
+
+    createTask(newTodo);
   };
 
-  // handle undo message box
+
+  // create task from suggestion click
+  const handleSuggestionCreate = (description) => {
+    createTask(description);
+  };
+
+
+  // mark task as completed + store for undo
+  const handleTaskCheck = (taskId) => {
+    setTaskList((prev) => {
+      const task = prev.find((t) => t._id === taskId);
+      if (!task) return prev;
+
+      setLastDeleted(task);
+
+      return prev.map((t) =>
+        t._id === taskId ? { ...t, isChecked: true } : t
+      );
+    });
+  };
+
+
+  // undo last completed task
   const handleUndo = () => {
     if (!lastDeleted) return;
 
@@ -94,104 +119,64 @@ export const Tasks = ({ filter, setFilter }) => {
           : task
       )
     );
+
     setLastDeleted(null);
   };
 
 
-  //
+  // finalize completion after undo timer
   const handleExpire = () => {
     if (!lastDeleted) return;
 
     const taskId = lastDeleted._id;
+
     setLastDeleted(null);
 
-    // Call backend to permanently mark this task as isChecked: true.
-    // The backend sets isChecked = true and returns the updated task.
     fetch(`https://task-api-m07f.onrender.com/tasks/${taskId}`, {
       method: "PATCH",
       headers: {
         "Content-Type": "application/json",
       },
-      body: JSON.stringify({
-        isChecked: true,
-      }),
+      body: JSON.stringify({ isChecked: true }),
     })
       .then((res) => res.json())
       .then((updatedTask) => {
-        // Replace local task with backend-confirmed version
         setTaskList((prev) =>
           prev.map((task) =>
             task._id === taskId ? updatedTask : task
           )
         );
-
-        // only remove undo AFTER success
-
       })
       .catch((err) => {
         console.error("Failed to update task:", err);
       });
-  }
-
-
-  /* remove default submit, and json content rests in createTask. In setTaskList add the newly created task to old list.*/
-  const onFormSubmit = (event) => {
-    event.preventDefault();
-    if (!newTodo.trim()) return;
-    setLoading(true);
-
-    fetch("https://task-api-m07f.onrender.com/tasks", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        description: newTodo,
-        isChecked: false,
-        date: Date.now(),
-      }),
-    })
-      .then((res) => res.json())
-      .then((createdTask) => {
-        //Add the createdtask to after previous
-        setTaskList((prev) => [...prev, createdTask]);
-        //Clear the input field
-        setNewTodo("");
-        setShowForm(false);
-      })
-      .catch((err) => {
-        console.error("Failed to add task:", err);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
   };
 
+
+  // fetch tasks on mount
   useEffect(() => {
     fetchTasks();
   }, []);
 
-  /*open TaskForm*/
+
+  // open/close form
   const enableForm = () => {
     setShowForm(true);
   };
 
-  /*close TaskForm*/
   const removeForm = () => {
     setShowForm(false);
     setNewTodo("");
   };
 
-  // filter in previous tasks fi they include text input
+
+  // build suggestions from existing tasks
   const filteredSuggestions = taskList
     .filter((task) =>
       task.description.toLowerCase().includes(newTodo.toLowerCase())
     )
-    // don't show suggestions if input is empty
     .filter(() => newTodo.trim() !== "")
-    // avoid showing exact same text as the only suggestion
     .filter((task) => task.description.toLowerCase() !== newTodo.toLowerCase())
-    //avoid duplicates
     .filter(
       (task, index, array) =>
         index ===
@@ -202,7 +187,6 @@ export const Tasks = ({ filter, setFilter }) => {
     );
 
 
-
   return (
     <section className="wrapper">
       <header>
@@ -210,7 +194,7 @@ export const Tasks = ({ filter, setFilter }) => {
           <div className="task-header">
             <h1>
               <i
-                className="fa-solid fa-bars fa-sm"
+                className="fa-solid fa-bars fa-sm main-bars"
                 onClick={() => setShowMobileMenu((prev) => !prev)}
               ></i>
               {filter === "current"
@@ -219,25 +203,46 @@ export const Tasks = ({ filter, setFilter }) => {
                   ? "Completed Tasks"
                   : "All Tasks"}
             </h1>
+
             {showMobileMenu && (
               <div className="mobile-dropdown">
-                <div className="mobile-menu-item" onClick={() => { setFilter("current"); setShowMobileMenu(false); }}>
-                  <i className="fa-solid fa-bars"></i>
+                <div
+                  className="mobile-menu-item"
+                  onClick={() => {
+                    setFilter("current");
+                    setShowMobileMenu(false);
+                  }}
+                >
+                  <i className="fa-solid fa-bars mobile-bars"></i>
                   <h4>Current Tasks</h4>
                 </div>
-                <div className="mobile-menu-item" onClick={() => { setFilter("all"); setShowMobileMenu(false); }}>
+
+                <div
+                  className="mobile-menu-item"
+                  onClick={() => {
+                    setFilter("all");
+                    setShowMobileMenu(false);
+                  }}
+                >
                   <i className="fa-solid fa-check-double"></i>
                   <h4>All Tasks</h4>
                 </div>
-                <div className="mobile-menu-item" onClick={() => { setFilter("completed"); setShowMobileMenu(false); }}>
+
+                <div
+                  className="mobile-menu-item"
+                  onClick={() => {
+                    setFilter("completed");
+                    setShowMobileMenu(false);
+                  }}
+                >
                   <i className="fa-regular fa-circle-check"></i>
                   <h4>Completed Tasks</h4>
                 </div>
               </div>
             )}
-            {/*Set the number of tasks to be the amount of taskt in the array with .length*/}
+
             <div className="counter-container">
-              <span>{taskList.filter((task) => !task.isChecked).length} Tasks</span>
+              <span>{count} {count === 1 ? "Task" : "Tasks"}</span>
             </div>
           </div>
 
@@ -255,6 +260,7 @@ export const Tasks = ({ filter, setFilter }) => {
         taskList={filteredTasks}
         onTaskCheck={handleTaskCheck}
       />
+
       {lastDeleted && (
         <UndoDeletion
           key={lastDeleted._id}
