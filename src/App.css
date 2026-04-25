@@ -18,19 +18,19 @@ button {
   width: 100%;
   display: flex;
   min-height: 100vh;
-  align-items: center;
+  align-items: stretch;
 }
 
 
 .main-container {
   display: flex;
   flex-direction: column;
-  width: 100%;
-  min-height: 100vh;
   flex: 1;
+  max-width: 1200px;
   background-color: var(--app-background-color);
   border: 1px solid var(--border);
   position: relative;
+  align-items: stretch;
 }
 
 
@@ -75,7 +75,9 @@ button {
 /* Menu */
 .menu {
   display: none;
+  flex-direction: column;
   padding: 1em;
+  flex: 0 0 30%;
 }
 
 
@@ -91,7 +93,8 @@ button {
 
 
 .filter-container {
-  min-height: 70vh;
+  display: flex;
+  flex: 1;
   color: var(--light-text-color);
   padding-top: 1em;
 }
@@ -192,6 +195,7 @@ li {
   display: flex;
   flex-direction: column;
   width: 100%;
+  min-height: 0;
   background-color: var(--list-background-color);
   flex: 1;
 }
@@ -213,7 +217,7 @@ header {
 
 
 .header-container h1 {
-  font-size: 1.8rem;
+  font-size: 1.6rem;
   font-family: var(--font2);
   font-weight: 500;
 }
@@ -305,7 +309,8 @@ header button {
   border-radius: 24px;
   gap: 0.4em;
   padding-bottom: 2em;
-  color: var(--tasks-text-color)
+  color: var(--tasks-text-color);
+  flex: 1;
 }
 
 
